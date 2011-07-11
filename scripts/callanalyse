@@ -1,0 +1,43 @@
+#!/usr/bin/python
+import os.path, getopt, sys
+import callcatcher
+
+def usage():
+	print "Usage: analyse [-s|--strict, -d|--detailed, -O|--OpenOffice.org, -m mapfile|--mapfile mapfile], inputobjfiles"
+	print "strict includes unused operators and copy ctors"
+	print "detailed outputs used functions as well as unused"
+	print "OpenOffice.org will exlude the common macro created extra methods, like ::_ForEach(..."
+
+if __name__ == '__main__':
+	strict = False
+	detailed = False
+	OOo = False
+
+	showusage = False
+	try:
+		opts, inputs = getopt.getopt(sys.argv[1:], "sdOm:", ["strict","detailed","OpenOffice.org","mapfile="])
+	except getopt.GetoptError:
+		showusage = True
+
+	if not len(inputs):
+		showusage = True
+
+	if showusage:
+		# print help information and exit:
+	        usage()
+	        sys.exit(2)
+
+        mapfile = ""
+
+	for o, a in opts:
+		if o in ("-s", "--strict"):
+		    strict = True
+		if o in ("-d", "--detailed"):
+		    detailed = True
+		if o in ("-O", "--OpenOffice.org"):
+		    OOo = True
+		if o in ("-m", "--mapfile"):
+		    mapfile = a
+
+	callcatcher.combine.combine('/tmp/analyse', inputs)
+	callcatcher.analyse.analyse('/tmp/analyse', "", strict, detailed, OOo, mapfile)

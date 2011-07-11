@@ -1,0 +1,86 @@
+
+callcatcher: collect functions/methods defined and subtract called/referenced
+=============================================================================
+For each file processed compile to assembly and detect all the functions
+defined, seperate them into virtual and nonvirtual. Then detect all the
+functions called or obvious instances of taking functions addresses.
+All output data is stored in ~/.callcollector and is persistant between
+runs to achieve a global analysis of a project.
+
+To install
+
+ > ./setup.py install
+
+To analyse, when all files of the project have been compiled, run 
+
+ > callanalyse ./finaloutput
+
+and we subtract the called functions from the list of nonvirtual defined
+functions.  (By extending this and using gcc with -fvtable-gc, we would also
+probably be able to detect what hierarchies of virtual methods could not
+possibly have been called and include those as well, but for the moment
+we just ignore virtual methods)
+
+e.g.
+
+ callcatcher g++ -c test.cxx -o test.o
+ callcatcher g++ -o mytest test.o
+ callanalyse mytest
+
+The tool attempts to know what the dependant components are for a given output
+file, and so in the example above ./analyse.py mytest will only report on
+the combination of object files known to comprise mytest
+
+
+For OpenOffice in LinuxIntelEnv.Set.sh replace 
+
+ export CXX="g++"
+ export CC="gcc"
+ export LINK="g++"
+
+with e.g.
+
+ export CXX="callcatcher g++"
+ export CC="callcatcher gcc"
+ export LINK="callcatcher g++"
+ export LIBMGR="callarchive ar"
+
+you may have to 
+
+ unset PYTHONPATH 
+ unset PYTHONHOME
+
+if these are already set
+
+Then just compile away, you get interesting results on a per-module basis, but
+without a full run over the entire source you will have false positives of
+course.
+
+Examples
+--------
+An individual module 
+ 
+ OpenOffice/sw > build
+ OpenOffice/sw > callanalyse ../unxlngi4.pro/lib/libsw580li.so
+
+Entire OOO output
+
+ OpenOffice > callanalyse */unxlngi6.pro/lib/*.so */unxlngi6.pro/bin/*
+
+callcatcher can understand map files, e.g.
+
+ OpenOffice/sal > callanalyse --OpenOffice.org --mapfile util/sal.map unxlng*/lib/libuno_sal.so.3
+
+
+Cons:
+-----
+ * Without virtual method support we have false negatives of unused virtuals
+ * Fragile use of assembler output
+
+
+Pro:
+----
+ * No false positives
+ * Works on ix86 and x86_64
+
+Caolan McNamara 2008 <caolanm@redhat.com>

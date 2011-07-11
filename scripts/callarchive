@@ -1,0 +1,17 @@
+#!/usr/bin/python
+import sys, os, os.path
+import callcatcher
+
+args = sys.argv[1:]
+
+if len(args) == 0:
+	print 'Usage: e.g. callarchive gcc test.c -o test'
+else:
+	#--hijack gcc/g++ and detect output file
+	callcatcher.archive(args)
+	
+        #--call original invocation---
+        program = ''
+        for arg in sys.argv[1:]:
+                program = program + ' ' + callcatcher.shellquote(arg)
+        os.execvp(sys.argv[1], sys.argv[1:])
