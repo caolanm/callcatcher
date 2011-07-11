@@ -31,45 +31,27 @@ The tool attempts to know what the dependant components are for a given output
 file, and so in the example above ./analyse.py mytest will only report on
 the combination of object files known to comprise mytest
 
+Ununsed, but well-formed methods are not reported, e.g. unused copy
+constructors and unused assignment operators unless --strict is used.
 
-For OpenOffice in LinuxIntelEnv.Set.sh replace 
+For LibreOffice use the built-in target in the toplevel LibreOffice makefile of
 
- export CXX="g++"
- export CC="gcc"
- export LINK="g++"
-
-with e.g.
-
- export CXX="callcatcher g++"
- export CC="callcatcher gcc"
- export LINK="callcatcher g++"
- export LIBMGR="callarchive ar"
-
-you may have to 
-
- unset PYTHONPATH 
- unset PYTHONHOME
-
-if these are already set
-
-Then just compile away, you get interesting results on a per-module basis, but
-without a full run over the entire source you will have false positives of
-course.
+ make findunusedcode
 
 Examples
 --------
 An individual module 
  
- OpenOffice/sw > build
- OpenOffice/sw > callanalyse ../unxlngi4.pro/lib/libsw580li.so
+ > make...
+ > callanalyse lib/libsw580li.so
 
-Entire OOO output
+A collection of binaries
 
- OpenOffice > callanalyse */unxlngi6.pro/lib/*.so */unxlngi6.pro/bin/*
+ > callanalyse */lib/*.so */bin/*
 
 callcatcher can understand map files, e.g.
 
- OpenOffice/sal > callanalyse --OpenOffice.org --mapfile util/sal.map unxlng*/lib/libuno_sal.so.3
+ > callanalyse --mapfile util/sal.map lib/libuno_sal.so.3
 
 
 Cons:
