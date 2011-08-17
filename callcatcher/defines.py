@@ -40,8 +40,7 @@ class CollectDefines:
 						if not lookup.typeinfo(virtualname):
 							self.virtualmethods.add(name)
 			elif foobar[0] != '.' and definere.match(foobar):
-				foobar = foobar[:-1]
-				name = foobar
+				name = foobar[:-1]
 
 				realname = aLookup.lookup(name)
 
@@ -53,10 +52,12 @@ class CollectDefines:
 					type = lastline.split('@')
 					if len(type) == 2 and type[1] == 'function':
 						self.methods.add(name)
+					elif name[:3] == 'LFB' and definere.match(lastline):
+						self.methods.add(lastline[:-1])
 					else:
 						type = lastline.split()
 						if len(type) == 7 and type[0] == '.def' and type[2] == '.scl' and type[3] == '2;' and type[4] == '.type' and type[5] == '32;' and type[6] == '.endef':
-							self.methods.add(name) 	
+							self.methods.add(name)
 		self.savedb(inputname)
 
 		for key in self.methods:

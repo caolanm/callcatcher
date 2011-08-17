@@ -1,6 +1,8 @@
 #!/bin/env python
-import os
+import os, platform
 
+def hasprefix():
+	return platform.system() == 'Darwin'
 def symbol(name):
 	index = name.find('@PLT')
 	if index != -1:
@@ -33,8 +35,12 @@ class virtualmethod:
 
 class Lookup:
 	def __init__(self):
-		self.filtin1, self.filtout1 = os.popen2('c++filt --no-strip-underscore', 'rw')
-		self.filtin2, self.filtout2 = os.popen2('c++filt --strip-underscore', 'rw')
+		if hasprefix():
+			self.filtin1, self.filtout1 = os.popen2('c++filt --strip-underscore', 'rw')
+			self.filtin2, self.filtout2 = os.popen2('c++filt --no-strip-underscore', 'rw')
+		else:
+			self.filtin1, self.filtout1 = os.popen2('c++filt --no-strip-underscore', 'rw')
+			self.filtin2, self.filtout2 = os.popen2('c++filt --strip-underscore', 'rw')
 	def lookup(self, name):
 		print >> self.filtin1, name
 		self.filtin1.flush()
@@ -47,6 +53,10 @@ class Lookup:
 		self.filtin2.flush()
 		name = self.filtout2.readline()
 		name = name[:-1]
+		if oldname <> name:
+			return symbol(name)
+		elif hasprefix():
+			name = name[1:]
 		return symbol(name)
 	def __del__(self):
 		self.filtin1.close()
