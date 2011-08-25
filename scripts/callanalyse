@@ -3,19 +3,19 @@ import os.path, getopt, sys
 import callcatcher
 
 def usage():
-	print "Usage: analyse [-s|--strict, -d|--detailed, -O|--OpenOffice.org, -m mapfile|--mapfile mapfile], inputobjfiles"
+	print "Usage: analyse [-s|--strict, -d|--detailed, -L|--LibreOffice, -m mapfile|--mapfile mapfile], inputobjfiles"
 	print "strict includes unused operators and copy ctors"
 	print "detailed outputs used functions as well as unused"
-	print "OpenOffice.org will exclude the special LibreOffice entry points, e.g. component_getFactory"
+	print "LibreOffice will exclude the special LibreOffice entry points, e.g. component_getFactory"
 
 if __name__ == '__main__':
 	strict = False
 	detailed = False
-	OOo = False
+	LibO = False
 
 	showusage = False
 	try:
-		opts, inputs = getopt.getopt(sys.argv[1:], "sdOm:", ["strict","detailed","OpenOffice.org","mapfile="])
+		opts, inputs = getopt.getopt(sys.argv[1:], "sdOm:", ["strict","detailed","LibreOffice","mapfile="])
 	except getopt.GetoptError:
 		showusage = True
 
@@ -34,10 +34,10 @@ if __name__ == '__main__':
 		    strict = True
 		if o in ("-d", "--detailed"):
 		    detailed = True
-		if o in ("-O", "--OpenOffice.org"):
-		    OOo = True
+		if o in ("-O", "--LibreOffice"):
+		    LibO = True
 		if o in ("-m", "--mapfile"):
 		    mapfile = a
 
 	callcatcher.combine.combine('/tmp/analyse', inputs)
-	callcatcher.analyse.analyse('/tmp/analyse', "", strict, detailed, OOo, mapfile)
+	callcatcher.analyse.analyse('/tmp/analyse', "", strict, detailed, LibO, mapfile)

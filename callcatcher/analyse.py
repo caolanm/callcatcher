@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import re, os.path, pickle, lookup, callconfig, combine, fnmatch
 
-OOoMacros = [
+LibOMacros = [
   '::impl_createFactory\(', 
   '::impl_createInstance\(', 
   '::GetChildWindowId\(', 
@@ -9,29 +9,29 @@ OOoMacros = [
   '::RegisterChildWindow\(',
   'Shell::CreateObject\(',
   'cppu_detail_getUnoType' ]
-OOoUNOEntryPoints = [
+LibOUNOEntryPoints = [
   '^component_canUnload$', 
   '^component_getDescriptionFunc$', 
   '^component_getFactory$', 
   '^component_getImplementationEnvironment$', 
   '^component_writeInfo$' ]
-OOoDLLEntryPoints = [
+LibODLLEntryPoints = [
   '^GetVersionInfo$',
   '^Create.+DocShellDll$',
   '^Init.+Dll$',
   '^DeInit.+Dll$',
   '^CreateDialogFactory$',
   'Sal_queryFaxNumber' ]
-OOoBuiltInEntryPoints = [
+LibOBuiltInEntryPoints = [
   '^__builtin_delete$',
   '^__builtin_new$',
   '^__builtin_vec_delete$',
   '^__builtin_vec_new$',
   '^__pure_virtual$' ]
-OOoMozillaEntryPoints = [
+LibOMozillaEntryPoints = [
   '^NPP_'
 ]
-OOoMISCEntryPoints = [
+LibOMISCEntryPoints = [
   '^getSvtAccessibilityComponentFactory$',
   '^getStandardAccessibleFactory$',
   '^dbg_dump',
@@ -88,10 +88,10 @@ flexEntryPoints = [
 xpdfEntryPoints = [
   'mapUCS2'
 ]
-OOoIgnoreRE = OOoMacros + OOoUNOEntryPoints + OOoDLLEntryPoints + OOoBuiltInEntryPoints + OOoMozillaEntryPoints + OOoMISCEntryPoints + xpdfEntryPoints
-OOoIgnore = []
-for item in OOoIgnoreRE:
-	OOoIgnore.append(re.compile(item))
+LibOIgnoreRE = LibOMacros + LibOUNOEntryPoints + LibODLLEntryPoints + LibOBuiltInEntryPoints + LibOMozillaEntryPoints + LibOMISCEntryPoints + xpdfEntryPoints
+LibOIgnore = []
+for item in LibOIgnoreRE:
+	LibOIgnore.append(re.compile(item))
 
 flexIgnore = []
 for item in flexEntryPoints:
@@ -178,7 +178,7 @@ def removemapped(methods, mapfileexports):
                 matched.add(a)
     return methods.difference(matched)
 
-def analyse(output, prefix = "", strict = False, detailed = False, OOo = False, mapfile=""):
+def analyse(output, prefix = "", strict = False, detailed = False, LibO = False, mapfile=""):
 	mydump = open(output + 'directcalls.dump', 'r')
 	directcalls = pickle.load(mydump)
 	mydump.close();
@@ -250,8 +250,8 @@ def analyse(output, prefix = "", strict = False, detailed = False, OOo = False, 
 						if directcalls.has_key(reverse):
 							acceptable = False
 
-			if OOo and acceptable:
-				for item in OOoIgnore:
+			if LibO and acceptable:
+				for item in LibOIgnore:
 					if item.search(call):
 						acceptable = False
 						break
