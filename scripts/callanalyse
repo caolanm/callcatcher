@@ -6,7 +6,7 @@ def usage():
 	print "Usage: analyse [-s|--strict, -d|--detailed, -O|--OpenOffice.org, -m mapfile|--mapfile mapfile], inputobjfiles"
 	print "strict includes unused operators and copy ctors"
 	print "detailed outputs used functions as well as unused"
-	print "OpenOffice.org will exlude the common macro created extra methods, like ::_ForEach(..."
+	print "OpenOffice.org will exclude the special LibreOffice entry points, e.g. component_getFactory"
 
 if __name__ == '__main__':
 	strict = False

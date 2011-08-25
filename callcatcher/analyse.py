@@ -2,19 +2,10 @@
 import re, os.path, pickle, lookup, callconfig, combine, fnmatch
 
 OOoMacros = [
-  '::_ForEach\(', 
-  '::Replace\(', 
-  '::Remove\(', 
-  '::Insert\(', 
-  '::DeleteAndDestroy\(', 
-  '::GetPos\(', 
-  '::LinkStub', 
   '::impl_createFactory\(', 
   '::impl_createInstance\(', 
   '::GetChildWindowId\(', 
   '::RegisterControl\(', 
-  '::Init\(', 
-  '::Exit\(',
   '::RegisterChildWindow\(',
   'Shell::CreateObject\(',
   'cppu_detail_getUnoType' ]
@@ -73,7 +64,8 @@ OOoMISCEntryPoints = [
   '^SchUpdateAttr$',
   'insertExtensionXcsFile',
   'insertExtensionXcuFile',
-  'insertModificationXcuFile'
+  'insertModificationXcuFile',
+  'cppu::bootstrap'
 ]
 flexEntryPoints = [
   'yy_flex_strlen',
