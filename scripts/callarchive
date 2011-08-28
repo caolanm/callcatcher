@@ -7,7 +7,7 @@ args = sys.argv[1:]
 if len(args) == 0:
 	print 'Usage: e.g. callarchive gcc test.c -o test'
 else:
-	#--hijack gcc/g++ and detect output file
+	#--hijack ar and detect output file
 	callcatcher.archive(args)
 	
         #--call original invocation---
