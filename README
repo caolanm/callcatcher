@@ -53,6 +53,9 @@ callcatcher can understand map files, e.g.
 
  > callanalyse --mapfile util/sal.map lib/libuno_sal.so.3
 
+use callarchive to intercept calls to "ar", e.g.
+
+ > callarchive libtest.a test.o
 
 Cons:
 -----
