@@ -113,7 +113,7 @@ def link(args):
 		if skip:
 			skip = False
 			continue
-		if arg[0] == '-' and arg[1] != 'o':
+		if arg[0] == '-' and len(arg) > 1 and arg[1] != 'o':
 			if arg[1] == 'l':
 				print 'linking against lib' + arg[2:] + '[.so|.a]'
 			fakeargs.append(arg)
