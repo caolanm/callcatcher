@@ -59,13 +59,16 @@ use callarchive to intercept calls to "ar", e.g.
 
 Cons:
 -----
- * Without virtual method support we have false negatives of unused virtuals
  * Fragile use of assembler output
-
+ * It deliberately detects and discards virtual methods, so doesn't report any virtual methods which might be unused
 
 Pro:
 ----
  * No false positives
  * Works on ix86 and x86_64
 
-Caolan McNamara 2008 <caolanm@redhat.com>
+To do:
+------
+ * Now that gcc supports user-written plugins converting this to a gcc plugin might make more sense than scraping assembly
+
+Caolán McNamara (2008-2012) <caolanm@redhat.com>
