@@ -70,7 +70,7 @@ def compile(args):
 	if suffix == '.s':
 		#force an intermediate copy of .s file
 		#for the rare case of an input .s file
-		program = shutil.copyfile(realinput, filename)
+		shutil.copyfile(realinput, filename)
 		print 'Copying', realinput, 'to', filename
 	else:
 		if index != -1:
@@ -87,7 +87,9 @@ def compile(args):
 		#force an intermediate assemble
 		program = program + ' ' + shellquote('-O0') + ' ' + shellquote('-S')
 		print program
-		os.system(program)
+		errret = os.system(program)
+		if errret != 0:
+			return
 
 	#collect non-virtual method/function declarations
 	aDefines = defines.CollectDefines()
