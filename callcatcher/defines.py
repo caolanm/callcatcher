@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/bin/env python2
 import sys, pickle, re, lookup, os.path, os
 
 class CollectDefines:

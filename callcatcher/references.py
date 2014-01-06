@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/bin/env python2
 import sys, pickle, os, re, lookup, os.path
 
 

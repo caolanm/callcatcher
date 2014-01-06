@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 import re, os.path, pickle, lookup, callconfig, combine, fnmatch
 
 LibOMacros = [

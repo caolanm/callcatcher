@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 import os, os.path, shutil, sys
 import defines, references, callconfig, combine, analyse
 
