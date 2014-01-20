@@ -5,6 +5,6 @@ Summary: Dead Code Detection
 Home-page: http://www.skynet.ie/~caolan/Packages/callcatcher.html
 Author: Caolán McNamara
 Author-email: caolanm@redhat.com
-License: UNKNOWN
-Description: UNKNOWN
-Platform: UNKNOWN
+License: MIT License
+Description: callcatcher is a tool to discover C++ code built by your compiler but not used by your application.
+Platform: any
