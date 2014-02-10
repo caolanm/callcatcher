@@ -1,4 +1,4 @@
-#!/bin/python
+#!/bin/python2
 
 example1 = "binfilter::E3dObjList::E3dObjList(binfilter::E3dObjList const&)";
 example2 = "E3dObjList::E3dObjList(E3dObjList const&)";
