@@ -30,7 +30,7 @@ def getinputfile(args):
 	i = 1
 	while i < len(args):
 		arg = args[i]
-		if arg == '-o' or arg == '-MF' or arg == '-MT' or arg == '-MQ':
+		if arg == '-o' or arg == '-MF' or arg == '-MT' or arg == '-MQ' or arg == '-isystem':
 			i = i + 1
 		elif arg[0] != '-':
 			if ret != "":
