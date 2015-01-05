@@ -4,7 +4,7 @@ callcatcher: collect functions/methods defined and subtract called/referenced
 For each file processed compile to assembly and detect all the functions
 defined, seperate them into virtual and nonvirtual. Then detect all the
 functions called or obvious instances of taking functions addresses.
-All output data is stored in ~/.callcollector and is persistant between
+All output data is stored in ~/.callcatcher and is persistant between
 runs to achieve a global analysis of a project.
 
 To install
