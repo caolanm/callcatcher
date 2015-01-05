@@ -27,11 +27,18 @@ e.g.
  callcatcher g++ -o mytest test.o
  callanalyse mytest
 
+typically for autoconf and cmake etc, setting CC/CXX/AR is sufficient
+
+ export CC="callcatcher gcc"
+ export CXX="callcatcher g++"
+ export AR="callarchive ar"
+ ./configure && make
+
 The tool attempts to know what the dependant components are for a given output
 file, and so in the example above ./analyse.py mytest will only report on
 the combination of object files known to comprise mytest
 
-Ununsed, but well-formed methods are not reported, e.g. unused copy
+Unused, but well-formed methods are not reported, e.g. unused copy
 constructors and unused assignment operators unless --strict is used.
 
 For LibreOffice use the built-in target in the toplevel LibreOffice makefile of
