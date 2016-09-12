@@ -1,5 +1,5 @@
 #!/usr/bin/python2
-import os.path, getopt, sys
+import os.path, getopt, sys, tempfile, shutil
 import callcatcher
 
 def usage():
@@ -39,5 +39,7 @@ if __name__ == '__main__':
 		if o in ("-m", "--mapfile"):
 		    mapfile = a
 
-	callcatcher.combine.combine('/tmp/analyse', inputs)
-	callcatcher.analyse.analyse('/tmp/analyse', "", strict, detailed, LibO, mapfile)
+	tmpdir = tempfile.mkdtemp()
+	callcatcher.combine.combine(tmpdir, inputs)
+	callcatcher.analyse.analyse(tmpdir, "", strict, detailed, LibO, mapfile)
+	shutil.rmtree(tmpdir)
