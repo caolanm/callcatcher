@@ -27,12 +27,17 @@ e.g.
  callcatcher g++ -o mytest test.o
  callanalyse mytest
 
-typically for autoconf and cmake etc, setting CC/CXX/AR is sufficient
+typically for autoconf, setting CC/CXX/AR is sufficient
 
  export CC="callcatcher gcc"
  export CXX="callcatcher g++"
  export AR="callarchive ar"
  ./configure && make
+
+To use callcatcher from within a cmake-based project, use the following setup:
+
+ mkdir build && cd build
+ cmake -DCMAKE_C_COMPILER="callcatcher-CC" -DCMAKE_CXX_COMPILER="callcatcher-CXX" -DCMAKE_AR="callcatcher-AR" ..
 
 The tool attempts to know what the dependant components are for a given output
 file, and so in the example above ./analyse.py mytest will only report on

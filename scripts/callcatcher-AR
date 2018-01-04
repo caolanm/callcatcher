@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+CALLCATCHER_AR="${CALLCATCHER_AR:-ar}"
+callcatcher "$CALLCATCHER_AR" "$@"

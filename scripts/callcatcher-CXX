@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+CALLCATCHER_CXX="${CALLCATCHER_CXX:-g++}"
+callcatcher "$CALLCATCHER_CXX" "$@"
