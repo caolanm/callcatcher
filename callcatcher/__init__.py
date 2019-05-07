@@ -3,6 +3,7 @@ import os, os.path, shutil, sys
 import defines, references, callconfig, combine, analyse
 
 def abslinkoutput(input):
+        index = -1
 	file = 'a.out'
 	if input.count('-o'):
 		index = input.index('-o')
@@ -10,13 +11,16 @@ def abslinkoutput(input):
 	elif input.count('-r'):
 		index = input.index('-r')
 		file = input[index + 1]
-	return os.path.abspath(file)
+        else:
+                for i in range(0, len(input)):
+                        if input[i].startswith('-o'):
+                                file = input[i][2:]
+                                break
+                        if input[i].startswith('-r'):
+                                file = input[i][2:]
+                                break
 
-def outputindex(input):
-	if input.count('-o'):
-		return input.index('-o') + 1
-	else:
-		return -1
+	return os.path.abspath(file)
 
 def makecachedir(file):
 	dir = os.path.split(file)[0]
@@ -40,13 +44,19 @@ def getinputfile(args):
 		i = i + 1
 	return ret
 
+# This needs to cope with -o file.o, -ofile.o and no -o at all
 def getoutputfile(args):
-	index = outputindex(args)
-	if index != -1:
-		return args[index], index
+	if args.count('-o'):
+		index = input.index('-o') + 1
+		return args[index], index, False
+	else:
+                for i in range(0, len(args)):
+                        if args[i].startswith('-o'):
+                                return args[i][2:], i, True
+
 	arg = getinputfile(args)
 	name, suffix = os.path.splitext(arg)
-	return name + '.o', -1
+	return name + '.o', -1, False
 
 def shellquote(arg):
     return "'" + arg.replace("'", "'\\''") + "'"
@@ -58,7 +68,7 @@ def compile(args):
 		return
 
 	name, suffix = os.path.splitext(realinput)
-	realoutput , index = getoutputfile(args)
+	realoutput , index, combined = getoutputfile(args)
 
 	print "callcatcher - detecting compiling: \n\tcollecting", \
 		realoutput
@@ -74,7 +84,10 @@ def compile(args):
 		print 'Copying', realinput, 'to', filename
 	else:
 		if index != -1:
-			args[index] = filename
+                        if combined:
+                                args[index] = '-o%s' % filename
+                        else:
+			        args[index] = filename
 		else:
 			args.append('-o')
 			args.append(filename)
