@@ -19,10 +19,7 @@ if __name__ == '__main__':
 	except getopt.GetoptError:
 		showusage = True
 
-	if not len(inputs):
-		showusage = True
-
-	if showusage:
+	if showusage or not inputs:
 		# print help information and exit:
 	        usage()
 	        sys.exit(2)
