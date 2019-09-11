@@ -26,9 +26,11 @@ class CollectDefines:
 		while 1:
 			lastline = foobar
 			foobar = input.readline()
-			if len(foobar) < 2:
+			if not foobar:
 				break
 			foobar = foobar[:-1]
+			if not foobar:
+				continue  # skip empty lines
 			if invtable and foobar[0] != '\t':
 				invtable = False 
 
