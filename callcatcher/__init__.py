@@ -47,7 +47,7 @@ def getinputfile(args):
 # This needs to cope with -o file.o, -ofile.o and no -o at all
 def getoutputfile(args):
 	if args.count('-o'):
-		index = input.index('-o') + 1
+		index = args.index('-o') + 1
 		return args[index], index, False
 	else:
                 for i in range(0, len(args)):
