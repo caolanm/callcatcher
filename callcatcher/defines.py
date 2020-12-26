@@ -1,16 +1,17 @@
-#!/bin/env python2
-import sys, pickle, re, lookup, os.path, os
+#!/usr/bin/env python3
+import sys, pickle, re, os.path, os
+from . import lookup
 
 class CollectDefines:
 	def __init__(self):
 		self.methods = set([])
 		self.virtualmethods = set([])
 	def savedb(self, file):
-		mydump = open(file + 'methods.dump', 'w')
+		mydump = open(file + 'methods.dump', 'wb')
 		pickle.dump(self.methods, mydump)
 		mydump.close();
 
-		mydump = open(file + 'virtualmethods.dump', 'w')
+		mydump = open(file + 'virtualmethods.dump', 'wb')
 		pickle.dump(self.virtualmethods, mydump)
 		mydump.close();
 	def collect(self, inputname):
@@ -64,8 +65,8 @@ class CollectDefines:
 
 		for key in self.methods:
 			if not key in self.virtualmethods:
-				print '\t\tnon-virtual', aLookup.lookup(key)
+				print('\t\tnon-virtual ' + aLookup.lookup(key))
 
 		for key in self.methods:
 			if key in self.virtualmethods:
-				print '\t\tvirtual', aLookup.lookup(key)
+				print('\t\tvirtual ' + aLookup.lookup(key))

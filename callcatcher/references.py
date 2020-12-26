@@ -1,26 +1,26 @@
-#!/bin/env python2
-import sys, pickle, os, re, lookup, os.path
-
+#!/usr/bin/env python3
+import sys, pickle, os, re, os.path
+from . import lookup
 
 class CollectReferences:
 	def __init__(self):
 		self.directcalls = {}
 	def savedb(self, file):
-		mydump = open(file + 'directcalls.dump', 'w')
+		mydump = open(file + 'directcalls.dump', 'wb')
 		pickle.dump(self.directcalls, mydump)
 		mydump.close();
 	def handleaddrtake(self, called, aLookup):
-#		print 'called is', called
+#		print('called is ' + called)
 		name = ''
 		if len(called) > 2 and called.find('+') == -1:
 			parts = called.split(',')
 			if len(parts) > 1:
 				name = parts[0]
-#				print 'name is', name
+#				print('name is ' + name)
 		if name != '' and not name[1:].isdigit():
 			if name[0] == '$':
 				name = name[1:]
-#			print 'name is now', name
+#			print('name is now ' + name)
 			end = 0
 			if name.find('%') != -1 and name[-1:] == ')':
 				end = len(name) - 1
@@ -30,7 +30,7 @@ class CollectReferences:
 				name = name[:end]
 
 			name = aLookup.lookup(name)
-#			print 'final name is', name
+#			print('final name is ' + name)
 			self.directcalls[name] = 2
 	def collect(self, inputfile):
 		input = open(inputfile, 'r')
@@ -45,8 +45,8 @@ class CollectReferences:
 		and64re = re.compile("	andq	")
 		lea32re = re.compile("	leal	")
 		lea64re = re.compile("	leaq	")
-	        data32re = re.compile("	.long	")
-	        data64re = re.compile("	.quad	")
+		data32re = re.compile("	.long	")
+		data64re = re.compile("	.quad	")
 		jumpre = re.compile("	jmp	")
 		push32re = re.compile("	pushl	")
 		push64re = re.compile("	pushq	")

@@ -1,10 +1,11 @@
-#!/bin/env python2
-import sys, pickle, os, re, lookup, os.path, callconfig
+#!/usr/bin/env python3
+import sys, pickle, os, re, os.path
+from . import lookup, callconfig
 
 def loadsomething(input):
 	temp = {}
 	try:
-		mydump = open(input)
+		mydump = open(input, "rb")
 		temp = pickle.load(mydump)
 		mydump.close();
 	except:
@@ -29,15 +30,15 @@ def combine(output, inputs):
 			directcalls[key] = tempmap[key]
 
 
-	mydump = open(output + 'virtualmethods.dump', 'w')
+	mydump = open(output + 'virtualmethods.dump', 'wb')
 	pickle.dump(virtualmethods, mydump)
 	mydump.close()
 
-	mydump = open(output + 'methods.dump', 'w')
+	mydump = open(output + 'methods.dump', 'wb')
 	pickle.dump(methods, mydump)
 	mydump.close()
 
-	mydump = open(output + 'directcalls.dump', 'w')
+	mydump = open(output + 'directcalls.dump', 'wb')
 	pickle.dump(directcalls, mydump)
 	mydump.close()
 

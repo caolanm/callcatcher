@@ -1,5 +1,6 @@
-#!/bin/env python2
+#!/usr/bin/env python3
 import os, platform
+from subprocess import Popen, PIPE
 
 def hasprefix():
 	return platform.system() == 'Darwin'
@@ -36,24 +37,28 @@ class virtualmethod:
 class Lookup:
 	def __init__(self):
 		if hasprefix():
-			self.filtin1, self.filtout1 = os.popen2('c++filt --strip-underscore', 'rw')
-			self.filtin2, self.filtout2 = os.popen2('c++filt --no-strip-underscore', 'rw')
+			p1 = Popen('c++filt --strip-underscore', shell=True, stdin=PIPE, stdout=PIPE, close_fds=True, encoding='utf-8')
+			(self.filtin1, self.filtout1) = (p1.stdin, p1.stdout)
+			p2 = Popen('c++filt --no-strip-underscore', shell=True, stdin=PIPE, stdout=PIPE, close_fds=True, encoding='utf-8')
+			(self.filtin2, self.filtout2) = (p2.stdin, p2.stdout)
 		else:
-			self.filtin1, self.filtout1 = os.popen2('c++filt --no-strip-underscore', 'rw')
-			self.filtin2, self.filtout2 = os.popen2('c++filt --strip-underscore', 'rw')
+			p1 = Popen('c++filt --no-strip-underscore', shell=True, stdin=PIPE, stdout=PIPE, close_fds=True, encoding='utf-8')
+			(self.filtin1, self.filtout1) = (p1.stdin, p1.stdout)
+			p2 = Popen('c++filt --strip-underscore', shell=True, stdin=PIPE, stdout=PIPE, close_fds=True, encoding='utf-8')
+			(self.filtin2, self.filtout2) = (p2.stdin, p2.stdout)
 	def lookup(self, name):
-		print >> self.filtin1, name
+		print(name, file=self.filtin1)
 		self.filtin1.flush()
 		oldname = name
 		name = self.filtout1.readline()
 		name = name[:-1]
-		if oldname <> name:
+		if oldname != name:
 			return symbol(name)
-		print >> self.filtin2, name
+		print(name, file=self.filtin2)
 		self.filtin2.flush()
 		name = self.filtout2.readline()
 		name = name[:-1]
-		if oldname <> name:
+		if oldname != name:
 			return symbol(name)
 		elif hasprefix():
 			name = name[1:]

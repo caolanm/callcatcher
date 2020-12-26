@@ -1,12 +1,12 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
 import os.path, getopt, sys, tempfile, shutil
 import callcatcher
 
 def usage():
-	print "Usage: analyse [-s|--strict, -d|--detailed, -L|--LibreOffice, -m mapfile|--mapfile mapfile], inputobjfiles"
-	print "strict includes unused operators and copy ctors"
-	print "detailed outputs used functions as well as unused"
-	print "LibreOffice will exclude the special LibreOffice entry points, e.g. component_getFactory"
+	print("Usage: analyse [-s|--strict, -d|--detailed, -L|--LibreOffice, -m mapfile|--mapfile mapfile], inputobjfiles")
+	print("strict includes unused operators and copy ctors")
+	print("detailed outputs used functions as well as unused")
+	print("LibreOffice will exclude the special LibreOffice entry points, e.g. component_getFactory")
 
 if __name__ == '__main__':
 	strict = False
@@ -21,10 +21,10 @@ if __name__ == '__main__':
 
 	if showusage or not inputs:
 		# print help information and exit:
-	        usage()
-	        sys.exit(2)
+		usage()
+		sys.exit(2)
 
-        mapfile = ""
+	mapfile = ""
 
 	for o, a in opts:
 		if o in ("-s", "--strict"):
