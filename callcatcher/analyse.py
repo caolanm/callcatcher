@@ -1,5 +1,6 @@
-#!/usr/bin/python2
-import re, os.path, pickle, lookup, callconfig, combine, fnmatch
+#!/usr/bin/env python3
+import re, os.path, pickle, fnmatch
+from . import lookup, callconfig, combine
 
 LibOMacros = [
   '::impl_createFactory\(', 
@@ -105,22 +106,22 @@ def compatrsplit(s, sep, maxsplits=0):
     return [sep.join(L[0:-maxsplits])] + L[-maxsplits:]
 
 def calliscopyctor(call):
-        call = call.replace("(anonymous namespace)", "")
-        call = call.replace("dbaxml::ODBExport::exportDataSource()::", "")
+	call = call.replace("(anonymous namespace)", "")
+	call = call.replace("dbaxml::ODBExport::exportDataSource()::", "")
 
-        endofname = call.find('(')
-        if endofname != -1:
-                name = call[0:endofname]
-                foo = name.split('::')
-                if len(foo) > 1:
-                        methodname = foo[len(foo)-1]
-                        if methodname == foo[len(foo)-2]:
-                                classname = compatrsplit(name, '::', 1)[0]
-                                copyctor = classname + '::' + methodname + '(' + classname + ' const&)'
-                                if copyctor == call:
-                                        return True
-        return False
-	
+	endofname = call.find('(')
+	if endofname != -1:
+		name = call[0:endofname]
+		foo = name.split('::')
+		if len(foo) > 1:
+			methodname = foo[len(foo)-1]
+			if methodname == foo[len(foo)-2]:
+				classname = compatrsplit(name, '::', 1)[0]
+				copyctor = classname + '::' + methodname + '(' + classname + ' const&)'
+				if copyctor == call:
+					return True
+	return False
+
 def readmapfile(mapfile):
 	if not len(mapfile):
 		return []
@@ -171,57 +172,57 @@ def convertall(methods):
     return ret
 
 def removemapped(methods, mapfileexports):
-    matched = set([])
-    for pattern in mapfileexports:
-	for a in methods:
-	    if (fnmatch.fnmatch(a, pattern)):
-                matched.add(a)
-    return methods.difference(matched)
+	matched = set([])
+	for pattern in mapfileexports:
+		for a in methods:
+			if (fnmatch.fnmatch(a, pattern)):
+				matched.add(a)
+	return methods.difference(matched)
 
 def analyse(output, prefix = "", strict = False, detailed = False, LibO = False, mapfile=""):
-	mydump = open(output + 'directcalls.dump', 'r')
+	mydump = open(output + 'directcalls.dump', 'rb')
 	directcalls = pickle.load(mydump)
 	mydump.close();
 
-	mydump = open(output + 'methods.dump', 'r')
+	mydump = open(output + 'methods.dump', 'rb')
 	methods = pickle.load(mydump)
 	mydump.close();
 
-	mydump = open(output + 'virtualmethods.dump', 'r')
+	mydump = open(output + 'virtualmethods.dump', 'rb')
 	virtualmethods = pickle.load(mydump)
 	mydump.close();
 
-        mapfileexports = readmapfile(mapfile)
+	mapfileexports = readmapfile(mapfile)
 
 	if detailed:
-		print prefix + '---Referenced symbols---'
+		print(prefix + '---Referenced symbols---')
 		for call in directcalls:
 			type = directcalls[call]
 			if type == 1:
-				print prefix + call + ' is directly called'
+				print(prefix + call + ' is directly called')
 			elif type == 3:
-				print prefix + call + ' is used in data'
+				print(prefix + call + ' is used in data')
 			else:
-				print prefix + call + ' has its address taken'
-                if len(mapfile):
-			print prefix + '---Global symbols in mapfile---'
+				print(prefix + call + ' has its address taken')
+		if len(mapfile):
+			print(prefix + '---Global symbols in mapfile---')
 			for call in mapfileexports:
-				print prefix + call + ' is set as global in mapfile'
-		print prefix + '---Unreferenced symbols---'
+				print(prefix + call + ' is set as global in mapfile')
+		print(prefix + '---Unreferenced symbols---')
 
 	methods = removemapped(methods, mapfileexports)
-        methods = convertall(methods)
-        virtualmethods = convertall(virtualmethods)
+	methods = convertall(methods)
+	virtualmethods = convertall(virtualmethods)
 
 	uncalled = []
 	for call in methods:
-		if not directcalls.has_key(call) and not call in virtualmethods:
+		if call not in directcalls and call not in virtualmethods:
 			uncalled.append(call)
 	uncalled.sort()
 
 	for call in uncalled:
 		if strict:
-			print prefix + call
+			print(prefix + call)
 		else:
 			acceptable = True
 			if call == 'main' or call == '_main':
@@ -239,7 +240,7 @@ def analyse(output, prefix = "", strict = False, detailed = False, LibO = False,
 					if calliscopyctor(call):
 						acceptable = False
 
-					#if we have an unused const varient, but a used nonconst varient or
+					#if we have an unused const variant, but a used nonconst variant or
 					#vice versa, that should be encouraged
 					if acceptable:
 						if call.rfind(' const') == len(call) - 6:
@@ -247,7 +248,7 @@ def analyse(output, prefix = "", strict = False, detailed = False, LibO = False,
 						else:
 							reverse = call + ' const'
 						
-						if directcalls.has_key(reverse):
+						if reverse in directcalls:
 							acceptable = False
 
 			if LibO and acceptable:
@@ -263,4 +264,4 @@ def analyse(output, prefix = "", strict = False, detailed = False, LibO = False,
 						break
 
 			if acceptable:
-				print prefix + call
+				print(prefix + call)

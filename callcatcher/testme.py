@@ -1,4 +1,4 @@
-#!/bin/python2
+#!/usr/bin/env python3
 
 example1 = "binfilter::E3dObjList::E3dObjList(binfilter::E3dObjList const&)";
 example2 = "E3dObjList::E3dObjList(E3dObjList const&)";
@@ -15,19 +15,19 @@ def calliscopyctor(call):
 	endofname = call.find('(')
 	if endofname != -1:
 		name = call[0:endofname]
-		print 'name is', name
+		print('name is', name)
 		foo = name.split('::')
 		if len(foo) > 1:
 			methodname = foo[len(foo)-1]
 			if methodname == foo[len(foo)-2]:
 				classname = compatrsplit(name, '::', 1)[0]
-				print 'constructor argument is', classname
-				print 'methodname is', methodname
+				print('constructor argument is', classname)
+				print('methodname is', methodname)
 				copyctor = classname + '::' + methodname + \
 					'(' + classname + ' const&)'
-				print copyctor
+				print(copyctor)
 				if copyctor == call:
-					print 'yes'
+					print('yes')
 
 
 calliscopyctor(example1)

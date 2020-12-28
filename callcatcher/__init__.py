@@ -1,9 +1,9 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
 import os, os.path, shutil, sys
-import defines, references, callconfig, combine, analyse
+from . import defines, references, callconfig, combine, analyse
 
 def abslinkoutput(input):
-        index = -1
+	index = -1
 	file = 'a.out'
 	if input.count('-o'):
 		index = input.index('-o')
@@ -11,14 +11,14 @@ def abslinkoutput(input):
 	elif input.count('-r'):
 		index = input.index('-r')
 		file = input[index + 1]
-        else:
-                for i in range(0, len(input)):
-                        if input[i].startswith('-o'):
-                                file = input[i][2:]
-                                break
-                        if input[i].startswith('-r'):
-                                file = input[i][2:]
-                                break
+	else:
+		for i in range(0, len(input)):
+			if input[i].startswith('-o'):
+				file = input[i][2:]
+				break
+			if input[i].startswith('-r'):
+				file = input[i][2:]
+				break
 
 	return os.path.abspath(file)
 
@@ -38,7 +38,7 @@ def getinputfile(args):
 			i = i + 1
 		elif arg[0] != '-':
 			if ret != "":
-				print >> sys.stderr, "callcatcher: multiple input files in one invocation currently unsupported, FIXME", ret, arg, args
+				print("callcatcher: multiple input files in one invocation currently unsupported, FIXME " + ret + " " + arg + " " + str(args), file=sys.stderr)
 				return ""
 			ret = arg
 		i = i + 1
@@ -50,9 +50,9 @@ def getoutputfile(args):
 		index = args.index('-o') + 1
 		return args[index], index, False
 	else:
-                for i in range(0, len(args)):
-                        if args[i].startswith('-o'):
-                                return args[i][2:], i, True
+		for i in range(0, len(args)):
+			if args[i].startswith('-o'):
+				return args[i][2:], i, True
 
 	arg = getinputfile(args)
 	name, suffix = os.path.splitext(arg)
@@ -70,8 +70,7 @@ def compile(args):
 	name, suffix = os.path.splitext(realinput)
 	realoutput , index, combined = getoutputfile(args)
 
-	print "callcatcher - detecting compiling: \n\tcollecting", \
-		realoutput
+	print("callcatcher - detecting compiling: \n\tcollecting " + realoutput)
 
 	#map original gcc output file to scraped intermediate .s
 	filename = callconfig.cachefile(realoutput)
@@ -81,13 +80,13 @@ def compile(args):
 		#force an intermediate copy of .s file
 		#for the rare case of an input .s file
 		shutil.copyfile(realinput, filename)
-		print 'Copying', realinput, 'to', filename
+		print('Copying ' + realinput + ' to ' + filename)
 	else:
 		if index != -1:
-                        if combined:
-                                args[index] = '-o%s' % filename
-                        else:
-			        args[index] = filename
+			if combined:
+				args[index] = '-o%s' % filename
+			else:
+				args[index] = filename
 		else:
 			args.append('-o')
 			args.append(filename)
@@ -99,7 +98,7 @@ def compile(args):
 			program = program + ' ' + shellquote(arg)
 		#force an intermediate assemble
 		program = program + ' ' + shellquote('-O0') + ' ' + shellquote('-S')
-		print program
+		print(program)
 		errret = os.system(program)
 		if errret != 0:
 			return
@@ -114,8 +113,7 @@ def compile(args):
 
 	os.remove(filename)
 
-	print '\t', len(aDefines.methods), 'methods', '(' + str(len(aDefines.virtualmethods)) + \
-		' virtual)'
+	print('\t' + str(len(aDefines.methods)) + ' methods ' + '(' + str(len(aDefines.virtualmethods)) + ' virtual)')
 
 def link(args):
 	realoutput = abslinkoutput(args)
@@ -130,7 +128,7 @@ def link(args):
 			continue
 		if arg[0] == '-' and len(arg) > 1 and arg[1] != 'o':
 			if arg[1] == 'l':
-				print 'linking against lib' + arg[2:] + '[.so|.a]'
+				print('linking against lib' + arg[2:] + '[.so|.a]')
 			fakeargs.append(arg)
 		elif arg == '-o':
 			skip = True
@@ -147,9 +145,8 @@ def link(args):
 				inputs.append(arg)
 
 	if len(uncompiled):
-		print 'callcatcher - linkline contains source files, forcing',\
-			'compile of:'
-		print '\t', uncompiled
+		print('callcatcher - linkline contains source files, forcing compile of: \t')
+		print(str(uncompiled))
 		fakeargs.append('-c')
 		for uncompile in uncompiled:
 			compileline = fakeargs
@@ -160,14 +157,13 @@ def link(args):
 		return
 
 	makecachedir(output)
-	print "callcatcher - detecting link:"
-	print "\tautojoining", \
-		realoutput, "from\n\t", inputs
+	print("callcatcher - detecting link:")
+	print("\tautojoining " + realoutput + " from\n\t" + str(inputs))
 	combine.combine(output, inputs)
-	print "callcatcher - dump currently unused:"
-	print "\tUse \"callanalyse\" to manually analyse a set of compiler output files"
-	print "\tautoanalysing", realoutput
-	print "\tCurrently unused functions are..."
+	print("callcatcher - dump currently unused:")
+	print("\tUse \"callanalyse\" to manually analyse a set of compiler output files")
+	print("\tautoanalysing", realoutput)
+	print("\tCurrently unused functions are...")
 	analyse.analyse(output, "\t\t")
 
 def archive(args):
@@ -189,12 +185,11 @@ def archive(args):
 		return
 
 	makecachedir(output)
-	print "callcatcher - detecting archiving:"
-	print "\tautojoining", \
-		realoutput, "from\n\t", inputs
+	print("callcatcher - detecting archiving:")
+	print("\tautojoining " + realoutput + " from\n\t " + inputs)
 	combine.combine(output, inputs)
-	print "callcatcher - dump currently unused:"
-	print "\tUse \"callanalyse\" to manually analyse a set of compiler output files"
-	print "\tautoanalysing", realoutput
-	print "\tCurrently unused functions are..."
+	print("callcatcher - dump currently unused:")
+	print("\tUse \"callanalyse\" to manually analyse a set of compiler output files")
+	print("\tautoanalysing " + realoutput)
+	print("\tCurrently unused functions are...")
 	analyse.analyse(output, "\t\t")

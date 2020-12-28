@@ -1,11 +1,11 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
 import sys, os, os.path
 import callcatcher
 
 args = sys.argv[1:]
 
 if len(args) == 0:
-	print 'Usage: e.g. callcatcher gcc test.c -o test'
+	print('Usage: e.g. callcatcher gcc test.c -o test')
 else:
 	#--hijack gcc/g++ and detect output file
 	if sys.argv.count('-c'):
