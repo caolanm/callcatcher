@@ -186,7 +186,7 @@ def archive(args):
 
 	makecachedir(output)
 	print("callcatcher - detecting archiving:")
-	print("\tautojoining " + realoutput + " from\n\t " + inputs)
+	print("\tautojoining " + realoutput + " from\n\t " + str(inputs))
 	combine.combine(output, inputs)
 	print("callcatcher - dump currently unused:")
 	print("\tUse \"callanalyse\" to manually analyse a set of compiler output files")
