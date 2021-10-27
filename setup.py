@@ -4,7 +4,7 @@
 from distutils.core import setup
 
 setup(name='callcatcher',
-      version='1.2.0',
+      version='1.2.1',
       description='Dead Code Detection',
       author='Caolán McNamara',
       author_email='caolanm@redhat.com',

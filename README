@@ -78,4 +78,4 @@ To do:
 ------
  * Now that gcc supports user-written plugins converting this to a gcc plugin might make more sense than scraping assembly
 
-Caolán McNamara (2008-2012) <caolanm@redhat.com>
+Caolán McNamara (2008-2021) <caolanm@redhat.com>
