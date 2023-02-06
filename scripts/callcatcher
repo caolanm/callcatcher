@@ -11,8 +11,17 @@ else:
 	if sys.argv.count('-c'):
 		callcatcher.compile(args)
 	else:
-		callcatcher.link(args)
-	
+		# https://gcc.gnu.org/wiki/Response_Files, read all @file to callcatcher
+		for i in range(len(args)):
+			arg = args[i]
+			if arg.startswith('@'):
+				try:
+					with open(arg[1:], 'r') as f:
+						args[i] = f.read()
+				except Exception as e:
+					print(e)
+		final_args = ' '.join(args).split(' ')
+		callcatcher.link(final_args)
 	#--call original invocation---
 	program = ''
 	for arg in sys.argv[1:]:
