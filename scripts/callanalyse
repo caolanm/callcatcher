@@ -31,7 +31,7 @@ if __name__ == '__main__':
 		    strict = True
 		if o in ("-d", "--detailed"):
 		    detailed = True
-		if o in ("-O", "--LibreOffice"):
+		if o in ("-L", "--LibreOffice"):
 		    LibO = True
 		if o in ("-m", "--mapfile"):
 		    mapfile = a
