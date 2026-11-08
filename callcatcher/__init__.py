@@ -26,7 +26,7 @@ def makecachedir(file):
 	dir = os.path.split(file)[0]
 	try:
 		os.makedirs(dir)
-	except:
+	except OSError:
 		pass
 
 def getinputfile(args):
